@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>FS App</title>
+    
+
+  </head>
+    
+  <body>
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flame Wise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FEFEFE;
+      margin: 0;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 40px;
+    }
+    .left-panel {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #avatar {
+      width: 200px;
+      height: 200px;
+      background: url('https://cdn3.iconfinder.com/data/icons/cat-pattern-colored/94/cat3-1024.png') no-repeat center center;
+      background-size: cover;
+      margin: 20px 0;
+      position: relative;
+    }
+    .hidden { display: none; }
+    .quest {
+      background: #fff;
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 12px;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: left;
+      transition: transform 0.2s ease;
+      border: 1px solid #ddd;
+    }
+    .quest:hover {
+      transform: scale(1.02);
+      background-color: #fcfcfc;
+    }
+    .quest.completed {
+      background-color: #e6ffe6;
+      border-left: 5px solid #4caf50;
+    }
+    .quest-title {
+      font-weight: bold;
+      color: #d9534f;
+      margin-bottom: 5px;
+      underline: none;
+      text-decoration: none;
+    }
+    .form-section {
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: left;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .form-section input, .form-section select {
+      width: 97%;
+      padding: 10px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      background-color: #ff6b6b;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e04a4a;
+    }
+    #shop {
+      background: #fff;
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .shop-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .icon-check {
+      color: green;
+      font-weight: bold;
+      float: right;
+    }
+    .right-panel {
+      flex: 1;
+    }
+    .quest-buttons {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .inventory-title {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .welcome-header {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+      #progress-bar {
+      height: 20px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px auto;
+      max-width: 500px;
+    }
+    #progress-bar-fill {
+      height: 100%;
+      background-color: #76c7c0;
+      width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
+      @keyframes jump {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .jumping {
+      animation: jump 0.6s ease;
+    }
+    .shaking {
+      animation: shake 0.5s ease;
+    }
+    .spinning {
+      animation: spin 1s linear;
+    }
+        .tab-panel.hidden { display: none; }
+    .tab-panel { padding-top: 10px; }
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .tab-buttons button {
+      padding: 8px 14px;
+      background-color: #f4f4f4;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #333;
+    }
+    .tab-buttons button:hover {
+      background-color: #eaeaea;
+      border-color: #999;
+    }
+    .tab-buttons button.active {
+      background-color: #ff6b6b;
+      color: white;
+      border-color: #ff6b6b;
+    }
+</style>
+</head>
+<body>
+ <h1 style="text-align: center;">FlameWise</h1>
+  <div id="sign-in" class="form-section">
+    <h3>Welcome! Tell us about your home:</h3>
+    <label>Name:</label>
+    <input type="text" id="userName">
+    <label>Home Type:</label>
+    <select id="homeType">
+      <option value="house">House</option>
+      <option value="apartment">Apartment</option>
+      <option value="dorm">Dorm</option>
+      <option value="mobile">Mobile Home</option>
+    </select>
+    <label>People Living With You:</label>
+    <input type="number" id="numPeople">
+    <label>Do You Have Pets?</label>
+    <input type="checkbox" id="hasPets">
+    <label>Do You Live With Children?</label>
+    <input type="checkbox" id="hasChildren">
+    <br><br>
+    <button onclick="submitUserInfo()">Start Game</button>
+  </div>
+
+  <div class="container hidden" id="main-content">
+    <div class="left-panel">
+      <div class="welcome-header" id="welcomeUser"></div>
+      <div id="avatar"></div>
+      <p><strong>Coins:</strong> <span id="currency">0</span> 💰</p>
+      <div id="inventory-container" class="inventory-title"></div>
+      <div id="shop">
+  <h4>Shop</h4>
+  <div class="shop-item">Emoji Pack 1 <button onclick="buyItem('emojiPack1', 10)">💰 10</button></div>
+  <div class="shop-item">Emoji Pack 2 <button onclick="buyItem('emojiPack2', 20)">💰 20</button></div>
+  <div class="shop-item">Talk Pack: Fire <button onclick="buyItem('talkFire', 25)">💰 25</button></div>
+  <div class="shop-item">Talk Pack: Sass <button onclick="buyItem('talkSass', 50)">💰 50</button></div>
+  <div class="shop-item">Talk Pack: Study <button onclick="buyItem('talkStudy', 30)">💰 30</button></div>
+  <div class="shop-item">Lucky Paws Boost (2x coins) <button onclick="buyItem('boostDouble', 20)">💰 20</button></div>
+</div>
+
+
+<audio id="bgMusic" loop volume="0.4"></audio>
+
+    </div>
+    <div class="right-panel">
+      <div class="tab-buttons">
+        <button onclick="switchPanel('quests')" id="tab-btn-quests" class="active">Quests</button>
+        <button onclick="switchPanel('badges')" id="tab-btn-badges">Badges</button>
+        <button onclick="switchPanel('rewards')" id="tab-btn-rewards">Streak</button>
+        <button onclick="switchPanel('minigames')" id="tab-btn-minigames">Mini Games</button>
+      </div>
+      <div id="tab-quests" class="tab-panel">
+      <div id="progress-bar">
+        <div id="progress-bar-fill"></div>
+      </div>
+      <div class="quest-buttons">
+        <h3>Your Quests</h3>
+        <button onclick="toggleQuestTab('all')">All</button>
+        <button onclick="toggleQuestTab('filtered')">To-Do</button>
+        <button onclick="toggleQuestTab('completed')">Completed</button>
+      </div>
+      <div id="badge-container" class="inventory-title"></div>
+      <div id="quest-container"></div>
+      </div>
+      <div id="tab-badges" class="tab-panel hidden">
+        <div class="inventory-title">Badge Progress</div>
+        <div id="badge-container-alt"></div>
+      </div>
+      
+      <div id="tab-minigames" class="tab-panel hidden">
+        <div class="inventory-title">Mini Games</div>
+        <p>Have your pick of 3 minigames! Play a small quiz, MeowBlast Blocks, or a memory card game! Scroll down to view them all.</p>
+        <h3>Quiz</h3>
+        <div class="minigame-wrapper">
+<iframe height="600" style="width: 70%;" scrolling="no" title="Untitled" src="https://codepen.io/SH-E-the-lessful/embed/myeQWrw?default-tab=" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/SH-E-the-lessful/pen/myeQWrw">
+  Untitled</a> by S.H. E. (<a href="https://codepen.io/SH-E-the-lessful">@SH-E-the-lessful</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+          <h3>MeowBlast Blocks</h3>
+</div>
+<iframe height="700" style="width: 70%;" scrolling="no" title="MeowBlast" src="https://codepen.io/SH-E-the-lessful/embed/ogjQwvJ?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/SH-E-the-lessful/pen/ogjQwvJ">
+  MeowBlast</a> by S.H. E. (<a href="https://codepen.io/SH-E-the-lessful">@SH-E-the-lessful</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+  
+</iframe>
+        <h3>Memory Cards</h3>
+<iframe height="900" style="width: 70%;" scrolling="no" title="Meow Memory" src="https://codepen.io/SH-E-the-lessful/embed/xbwQrEQ?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/SH-E-the-lessful/pen/xbwQrEQ">
+  Meow Memory</a> by S.H. E. (<a href="https://codepen.io/SH-E-the-lessful">@SH-E-the-lessful</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+      </div>
+      <div id="tab-rewards" class="tab-panel hidden">
+  <div class="inventory-title">Streak</div>
+  <div id="reward-container"></div>
+</div>
+      </div>
+      </div>
+    </div>
+  </div>
+<script>
+let coins = parseInt(localStorage.getItem("coins")) || 0;
+let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+let completedQuests = new Set(JSON.parse(localStorage.getItem("completedQuests")) || []);
+let userHasChildren = false;
+
+function submitUserInfo() {
+  const name = document.getElementById("userName").value;
+  const hasChildrenBox = document.getElementById("hasChildren");
+  userHasChildren = hasChildrenBox && hasChildrenBox.checked;
+  document.getElementById("welcomeUser").textContent = `Welcome, ${name}!`;
+  document.getElementById("sign-in").classList.add("hidden");
+  document.getElementById("main-content").classList.remove("hidden");
+  updateCurrency();
+  animateCoinReward();
+  updateInventory();
+  renderQuests();
+  renderBadges();
+}
+
+const childOnlyQuests = [12, 27];
+
+function renderQuests() {
+  updateProgressBar();
+  const questContainer = document.getElementById("quest-container");
+  questContainer.innerHTML = "";
+  quests.forEach((quest, index) => {
+    const isCompleted = completedQuests.has(index);
+    const shouldRender =
+      currentTab === "all" ||
+      (currentTab === "completed" && isCompleted) ||
+      (currentTab === "filtered" && !isCompleted);
+
+    const isChildOnly = childOnlyQuests.includes(index);
+    if (!userHasChildren && isChildOnly) return;
+
+    if (shouldRender) {
+      const questDiv = document.createElement("div");
+      questDiv.className = "quest" + (isCompleted ? " completed" : "");
+
+      const questLink = document.createElement("a");
+      questLink.href = quest.link;
+      questLink.target = "_blank";
+      questLink.textContent = quest.title;
+      questLink.className = "quest-title";
+
+      const completeBtn = document.createElement("button");
+      completeBtn.textContent = "Complete";
+      completeBtn.onclick = () => completeQuest(index);
+      if (isCompleted) completeBtn.style.display = "none";
+
+      questDiv.appendChild(questLink);
+      questDiv.appendChild(document.createElement("br"));
+      questDiv.appendChild(completeBtn);
+      questContainer.appendChild(questDiv);
+    }
+  });
+}
+const quests = [
+  { title: "Test your smoke alarms (monthly reminder)", link: "https://www.nfpa.org/education-and-research/home-fire-safety/smoke-alarms/installing-and-maintaining-smoke-alarms" },
+  { title: "Install smoke alarms in every bedroom", link: "https://www.nfpa.org/education-and-research/home-fire-safety/smoke-alarms/installing-and-maintaining-smoke-alarms" },
+  { title: "Check that each alarm is less than 10 years old", link: "https://www.nfpa.org/education-and-research/home-fire-safety/smoke-alarms/installing-and-maintaining-smoke-alarms" },
+  { title: "Practice a 2-minute home fire escape drill", link: "https://www.ready.gov/home-fire-escape-plan" },
+  { title: "Draw a map of your home’s exit routes", link: "https://www.nfpa.org/education-and-research/home-fire-safety/escape-planning" },
+  { title: "Check that all windows can open easily", link: "" },
+  { title: "Ensure hallways and exits are uncluttered", link: "" },
+  { title: "Pick a family meeting point outside your home", link: "https://www.kidsinthehouse.com/all-parents/experts/introductions/what-you-need-know-about-creating-family-meeting-place" },
+  { title: "Learn how to use a fire extinguisher", link: "https://www.youtube.com/watch?v=PQV71INDaqY&t=3s" },
+  { title: "Place a fire extinguisher in the kitchen and garage", link: "https://desert-fire.com/fire-extinguisher-placement/" },
+  { title: "Check for frayed wires or overloaded outlets", link: "https://softhandtech.com/how-do-i-know-if-my-electrical-wire-is-damaged/" },
+  { title: "Install outlet covers if you have toddlers", link: "https://www.doityourself.com/stry/replacing-an-electrical-outlet-cover#:~:text=Make%20sure%20that%20the%20mounting%20holes%20on%20your,is%20time%20to%20turn%20the%20power%20back%20on." },
+  { title: "Never leave cooking unattended – set a timer!", link: "https://www.usfa.fema.gov/prevention/home-fires/prevent-fires/cooking/" },
+  { title: "Keep a pan lid nearby when cooking", link: "https://www.firstalert.com/blogs/safety-corner/dos-donts-when-cooking-in-kitchen" },
+  { title: "Move flammable items away from stovetops", link: "https://www.firstalert.com/blogs/safety-corner/dos-donts-when-cooking-in-kitchen" },
+  { title: "Create a fire safety plan with roommates", link: "https://www.ready.gov/home-fire-escape-plan" },
+  { title: "Ask your landlord about the building’s fire safety", link: "" },
+  { title: "Review fire escape routes if you live on the 2nd+ floor", link: "" },
+  { title: "Install a carbon monoxide detector", link: "https://www.epa.gov/indoor-air-quality-iaq/where-should-i-place-carbon-monoxide-detector" },
+  { title: "Inspect space heaters: 3ft clearance", link: "https://www.cpsc.gov/Newsroom/News-Releases/2023/CPSC-Warns-Consumers-to-be-Cautious-When-Using-Space-Heaters-Furnaces-and-Fireplaces-This-Winter" },
+  { title: "Watch a video on grease fires", link: "https://www.youtube.com/watch?v=yuK4elWoq2o" },
+  { title: "Watch a video on electrical fires", link: "https://www.youtube.com/watch?v=of27sAwtzg8" },
+  { title: "Read an infographic about candle safety", link: "https://www.nfpa.org/education-and-research/home-fire-safety/candles" },
+  { title: "Complete a fire safety quiz (5 Qs)", link: "" },
+  { title: "Learn what to do if trapped in a room during a fire", link: "https://www.ready.gov/home-fires" },
+  { title: "Create an emergency plan that includes pets", link: "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/pet-fire-safety.html#:~:text=The%20best%20way%20to%20protect%20your%20pets%20from,stay%20if%20you%20need%20to%20leave%20your%20home." },
+  { title: "Place pet alert window decals", link: "https://www.amazon.com/pet-alert-decals/s?k=pet+alert+decals" },
+  { title: "Teach children how to dial 911", link: "https://kidshealth.org/en/parents/911.html" },
+  { title: "Practice stop, drop, and roll with your kids", link: "https://www.household-management-101.com/stop-drop-and-roll.html" },
+  { title: "Make a “go bag” in case of evacuation", link: "https://readyforwildfire.org/prepare-for-wildfire/emergency-supply-kit/" },
+];
+
+function submitUserInfo() {
+  const name = document.getElementById("userName").value;
+  document.getElementById("welcomeUser").textContent = `Welcome, ${name}!`;
+  document.getElementById("sign-in").classList.add("hidden");
+  document.getElementById("main-content").classList.remove("hidden");
+  updateCurrency();
+    animateCoinReward();
+  updateInventory();
+  renderQuests();
+  renderBadges();
+  document.getElementById("sign-in").classList.add("hidden");
+  document.getElementById("main-content").classList.remove("hidden");
+  updateCurrency();
+  updateInventory();
+  renderQuests();
+}
+
+function updateCurrency() {
+  document.getElementById("currency").textContent = coins;
+  localStorage.setItem("coins", coins);
+}
+
+function updateInventory() {
+  const container = document.getElementById("inventory-container");
+  container.innerHTML = inventory.length ? `Inventory: ${inventory.join(", ")}` : "Inventory: (empty)";
+  localStorage.setItem("inventory", JSON.stringify(inventory));
+}
+
+function buyItem(item, cost) {
+  if (inventory.includes(item)) return alert("Item already owned!");
+  if (coins < cost) return alert("Not enough coins!");
+  coins -= cost;
+  inventory.push(item);
+  updateCurrency();
+  updateInventory();
+}
+
+function completeQuest(index) {
+  animatePet();
+  if (!completedQuests.has(index)) {
+    completedQuests.add(index);
+    coins += inventory.includes("boostDouble") ? 10 : 5;
+    updateCurrency();
+    localStorage.setItem("completedQuests", JSON.stringify([...completedQuests]));
+  }
+  renderQuests(currentTab);
+}
+
+let currentTab = "all";
+
+function toggleQuestTab(tab) {
+  currentTab = tab;
+  renderQuests();
+}
+
+function renderQuests() {
+  updateProgressBar();
+  const questContainer = document.getElementById("quest-container");
+  questContainer.innerHTML = "";
+  quests.forEach((quest, index) => {
+    const isCompleted = completedQuests.has(index);
+    const shouldRender =
+      currentTab === "all" ||
+      (currentTab === "completed" && isCompleted) ||
+      (currentTab === "filtered" && !isCompleted);
+
+    if (shouldRender) {
+      const questDiv = document.createElement("div");
+      questDiv.className = "quest" + (isCompleted ? " completed" : "");
+
+      const questLink = document.createElement("a");
+      questLink.href = quest.link;
+      questLink.target = "_blank";
+      questLink.textContent = quest.title;
+      questLink.className = "quest-title";
+
+      const completeBtn = document.createElement("button");
+      completeBtn.textContent = "Complete";
+      completeBtn.onclick = () => completeQuest(index);
+      if (isCompleted) completeBtn.style.display = "none";
+
+      questDiv.appendChild(questLink);
+      questDiv.appendChild(document.createElement("br"));
+      questDiv.appendChild(completeBtn);
+      questContainer.appendChild(questDiv);
+    }
+  });
+}
+
+function updateProgressBar() {
+  const progressFill = document.getElementById("progress-bar-fill");
+  const percent = Math.floor((completedQuests.size / quests.length) * 100);
+  progressFill.style.width = percent + "%";
+  updateBadges(percent);
+}
+
+function updateBadges(percent) {
+  const badgeContainer = document.getElementById("badge-container");
+  let badge = "";
+  if (percent >= 100) {
+    badge = "🏆 Fire Master: All quests completed!";
+  } else if (percent >= 75) {
+    badge = "🔥 Fire Expert: Over 75% done!";
+  } else if (percent >= 50) {
+    badge = "🚒 Fire Ready: Halfway there!";
+  } else if (percent >= 25) {
+    badge = "🧯 Fire Beginner: Getting started!";
+  } else {
+    badge = "👣 New Recruit: Begin your safety journey.";
+  }
+  badgeContainer.textContent = '';
+}
+
+function animatePet() {
+  const avatar = document.getElementById("avatar");
+  const animations = ["jumping", "shaking", "spinning"];
+  const random = animations[Math.floor(Math.random() * animations.length)];
+  avatar.classList.add(random);
+  setTimeout(() => avatar.classList.remove(random), 1000);
+}
+
+function switchPanel(tab) {
+  const panels = ['tab-quests', 'tab-badges', 'tab-rewards', 'tab-minigames'];
+  const buttons = ['tab-btn-quests', 'tab-btn-badges', 'tab-btn-rewards', 'tab-btn-minigames'];
+  panels.forEach(id => document.getElementById(id).classList.add('hidden'));
+  buttons.forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+  document.getElementById(`tab-btn-${tab}`).classList.add('active');
+  if (tab === 'badges') {
+    renderBadges();
+  }
+}
+
+
+const earnedBadges = new Set(JSON.parse(localStorage.getItem('earnedBadges')) || []);
+
+const allBadges = [
+  { id: 'quest5', label: '🧭 Quest Initiate', description: 'Complete 5 quests', type: 'quest', condition: () => completedQuests.size >= 5 },
+  { id: 'quest10', label: '🔥 Quest Pro', description: 'Complete 10 quests', type: 'quest', condition: () => completedQuests.size >= 10 },
+  { id: 'quest20', label: '🏅 Quest Veteran', description: 'Complete 20 quests', type: 'quest', condition: () => completedQuests.size >= 20 },
+  { id: 'quest29', label: '🚒 Quest Commander', description: 'Complete 29 quests', type: 'quest', condition: () => completedQuests.size >= 29 },
+  { id: 'questAll', label: '🏆 Fire Master', description: 'Complete all 30 quests', type: 'quest', condition: () => completedQuests.size === quests.length },
+  { id: 'shop3', label: '🛍️ Shopper', description: 'Buy 3 items from the shop', type: 'shop', condition: () => inventory.length >= 3 },
+  { id: 'shop6', label: '🛒 Pro Shopper', description: 'Buy 6 items from the shop', type: 'shop', condition: () => inventory.length >= 6 },
+];
+
+function renderBadges() {
+  const newlyEarned = [];
+  const badgeContainer = document.getElementById("badge-container-alt");
+  badgeContainer.innerHTML = "";
+  const earned = [];
+  const locked = [];
+  allBadges.forEach(badge => {
+    const isEarned = badge.condition();
+    const alreadyEarned = earnedBadges.has(badge.id);
+    const badgeDiv = document.createElement("div");
+    badgeDiv.innerHTML = `<strong>${badge.label}</strong><br><small>${badge.description}</small>`;
+    badgeDiv.style.opacity = isEarned ? 0.3 : 1;
+    badgeDiv.style.color = isEarned ? '#888' : '#000';
+    badgeDiv.style.marginBottom = '8px';
+    badgeDiv.style.fontSize = '18px';
+    badgeDiv.style.padding = '5px';
+    badgeDiv.style.borderBottom = '1px solid #ccc';
+
+    if (isEarned) {
+      earned.push(badgeDiv);
+      if (!alreadyEarned) {
+        newlyEarned.push(badge);
+        earnedBadges.add(badge.id);
+      }
+    } else {
+      locked.push(badgeDiv);
+    }
+  });
+    
+  locked.concat(earned).forEach(el => badgeContainer.appendChild(el));
+  if (newlyEarned.length > 0) {
+    newlyEarned.forEach(b => alert(`🎉 New Badge Unlocked: ${b.label}
+${b.description}`));
+    localStorage.setItem("earnedBadges", JSON.stringify([...earnedBadges]));
+  }
+}
+
+
+function renderRewards() {
+  const claimed = JSON.parse(localStorage.getItem("claimedRewards") || "[]");
+  
+  const rewardContainer = document.getElementById("reward-container");
+  rewardContainer.innerHTML = "";
+
+  const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+  const lastLogin = localStorage.getItem("lastLoginDate");
+  let streak = parseInt(localStorage.getItem("loginStreak")) || 0;
+
+  if (lastLogin !== today) {
+    if (lastLogin && new Date(today) - new Date(lastLogin) === 86400000) {
+      streak++;
+    } else {
+      streak = 1;
+    }
+    localStorage.setItem("lastLoginDate", today);
+    localStorage.setItem("loginStreak", streak);
+    coins += 5 * streak;
+    updateCurrency();
+    animateCoinReward();
+    rewardContainer.innerHTML += `<p>🔥 Login Streak: ${streak} days - You earned ${5 * streak} coins!</p>`;
+  } else {
+    rewardContainer.innerHTML += `<p>🔥 Login Streak: ${streak} days - Already rewarded today.</p>`;
+  }
+
+  const fireDrillQuests = [3, 4, 15];
+  const hasDoneDrills = fireDrillQuests.every(i => completedQuests.has(i));
+  
+
+  if (hasDoneDrills && !claimed.includes("drillBonus")) {
+    rewardContainer.innerHTML += `<p>🚒 Fire Drill Mastery - Earned 20 bonus coins!</p>`;
+    coins += 20;
+    updateCurrency();
+    animateCoinReward();
+    claimed.push("drillBonus");
+    localStorage.setItem("claimedRewards", JSON.stringify(claimed));
+  } else if (!claimed.includes("drillBonus")) {
+    rewardContainer.innerHTML += `<p>🚒 Complete all Fire Drill quests to earn a 20 coin bonus.</p>`;
+  }
+
+  updateCurrency();
+}
+
+const originalSwitchPanel = switchPanel;
+switchPanel = function(tab) {
+  originalSwitchPanel(tab);
+  if (tab === 'rewards') renderRewards();
+};
+
+function animateCoinReward() {
+  const currencyEl = document.getElementById("currency");
+  currencyEl.style.transition = "transform 0.3s ease";
+  currencyEl.style.transform = "scale(1.3)";
+  setTimeout(() => {
+    currencyEl.style.transform = "scale(1)";
+  }, 300);
+}
+</script>
+</body>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
